@@ -14,16 +14,16 @@ def mod_kron(n, m):
     return (n == m)
 
 
-def assemble_K(N, k, x_min, x_max, sparse=False):
+def assemble_K(k,x):
     """
     Assemble the matrix representation of the kinetic energy contribution
     to the Hamiltonian.
 
     k = -hbar**2 / 2 m 
     """    
-    dx = (x_min - x_max) / N
-  
+    N = np.size(x)
     K = np.zeros((N,N)).astype(np.complex)
+    dx = x[1]-x[0]
   
     for m in range(0, N):
         for n in range(0,N):
@@ -32,11 +32,12 @@ def assemble_K(N, k, x_min, x_max, sparse=False):
     return K
 
 
-def assemble_V(N, u, sparse=False):
+def assemble_V(u):
     """
     Assemble the matrix representation of the potential energy contribution
     to the Hamiltonian.
     """
+    N = np.size(u)
     V = np.zeros((N,N)).astype(np.complex)
   
     for m in range(N):
@@ -53,7 +54,7 @@ def basis_step_evalute(N, u, x):
     return u
 
 
-def assemble_u_potential(N, u_func, x, args, sparse=False):
+def assemble_u_potential(u_func, x, args):
     """
 
     """
