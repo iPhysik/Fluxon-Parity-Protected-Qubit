@@ -77,6 +77,8 @@ def spectrum_vs_ng(ng_list,Q_list,phi0,params,args,asymEJ=True):
     
     i=0
     spectrum = np.zeros((np.size(ng_list),3))
+    energy = np.zeros((np.size(ng_list),4))
+
     for ng in ng_list:
         # charging energy of CPB
         H0 = 4* E_C * np.kron( (np.diag((Q_list-ng)**2)), np.diag(ones(gridsize+1)) )
@@ -87,9 +89,11 @@ def spectrum_vs_ng(ng_list,Q_list,phi0,params,args,asymEJ=True):
     
         spectrum[i,0]=ng
         spectrum[i,1:]= evals[1:3]-evals[0]
+        energy[i,0]=x0
+        energy[i,1:]=evals[0:3]
         i+=1
         
-    return spectrum
+    return spectrum,energy
 
 
 def spectrum_vs_phi0(phi0_list,Q_list,ng_list,params,args,asymEJ=True):
@@ -119,7 +123,7 @@ def spectrum_vs_phi0(phi0_list,Q_list,ng_list,params,args,asymEJ=True):
     
     i=0
     spectrum = np.zeros((np.size(ng_list)*np.size(phi0_list),3))
-
+    energy = np.zeros((np.size(ng_list)*np.size(phi0_list),4))
     for ng in ng_list:
         # charging energy of CPB
         H0 = 4* E_C * np.kron( (np.diag((Q_list-ng)**2)), np.diag(ones(gridsize+1)) )
@@ -152,7 +156,9 @@ def spectrum_vs_phi0(phi0_list,Q_list,ng_list,params,args,asymEJ=True):
         
             spectrum[i,0]=x0
             spectrum[i,1:]= evals[1:3]-evals[0]
+            energy[i,0]=x0
+            energy[i,1:]=evals[0:3]
             i+=1
             
-    return spectrum
+    return spectrum, energy
 
