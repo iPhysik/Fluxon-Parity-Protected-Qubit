@@ -26,7 +26,7 @@ def U_ho(x, args):
     return u
 
 
-def spectrum_vs_ng(ng_list,Q_list,phi0,params,args,asymEJ=True):
+def spectrum_vs_ng(ng_list,Q_list,phi0,params,args,max_E_level=4,asymEJ=True):
     E_J =params['EJ']
     E_C = params['EC']
     E_L = params['EL']
@@ -76,8 +76,7 @@ def spectrum_vs_ng(ng_list,Q_list,phi0,params,args,asymEJ=True):
 
     
     i=0
-    spectrum = np.zeros((np.size(ng_list),3))
-    energy = np.zeros((np.size(ng_list),4))
+    energy = np.zeros((np.size(ng_list),max_E_level+1))
 
     for ng in ng_list:
         # charging energy of CPB
@@ -87,16 +86,14 @@ def spectrum_vs_ng(ng_list,Q_list,phi0,params,args,asymEJ=True):
         evals, evecs = solve_eigenproblem(Hf)
         evals = evals.real
     
-        spectrum[i,0]=ng
-        spectrum[i,1:]= evals[1:3]-evals[0]
-        energy[i,0]=x0
-        energy[i,1:]=evals[0:3]
+        energy[i,0]=ng
+        energy[i,1:]=evals[0:max_E_level]
         i+=1
         
-    return spectrum,energy
+    return energy
 
 
-def spectrum_vs_phi0(phi0_list,Q_list,ng_list,params,args,asymEJ=True):
+def spectrum_vs_phi0(phi0_list,Q_list,ng_list,params,args,max_E_level=4,asymEJ=True):
     E_J =params['EJ']
     E_C = params['EC']
     E_L = params['EL']
@@ -122,8 +119,7 @@ def spectrum_vs_phi0(phi0_list,Q_list,ng_list,params,args,asymEJ=True):
             
     
     i=0
-    spectrum = np.zeros((np.size(ng_list)*np.size(phi0_list),3))
-    energy = np.zeros((np.size(ng_list)*np.size(phi0_list),4))
+    energy = np.zeros((np.size(ng_list)*np.size(phi0_list),max_E_level+1))
     for ng in ng_list:
         # charging energy of CPB
         H0 = 4* E_C * np.kron( (np.diag((Q_list-ng)**2)), np.diag(ones(gridsize+1)) )
@@ -154,11 +150,9 @@ def spectrum_vs_phi0(phi0_list,Q_list,ng_list,params,args,asymEJ=True):
             evals, evecs = solve_eigenproblem(H+H0)
             evals = evals.real
         
-            spectrum[i,0]=x0
-            spectrum[i,1:]= evals[1:3]-evals[0]
             energy[i,0]=x0
-            energy[i,1:]=evals[0:3]
+            energy[i,1:]=evals[0:max_E_level]
             i+=1
             
-    return spectrum, energy
+    return energy
 
